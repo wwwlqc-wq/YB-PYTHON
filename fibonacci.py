@@ -1,6 +1,5 @@
 
 import math
-import input_output
 #square root
 def fibonacci_math(n):
     a=(1+math.sqrt(5))/2
