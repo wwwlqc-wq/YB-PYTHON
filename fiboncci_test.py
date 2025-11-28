@@ -1,0 +1,165 @@
+import math
+
+# Function to calculate the n-th Fibonacci number using the closed-form formula (Binet's formula)
+# use math package
+def fibonacci_math(n):
+    # Golden ratio (φ), approximately 1.618...
+    a = (1 + math.sqrt(5)) / 2  
+
+    # Conjugate of the golden ratio (1 - φ), approximately -0.618...
+    b = (1 - math.sqrt(5)) / 2  
+
+    # Apply Binet's formula to compute the n-th Fibonacci number:
+    # F(n) = (φ^n - (1 - φ)^n) / √5
+    # Because of floating-point precision issues, we use round() 
+    # to get the nearest integer as the final Fibonacci number.
+    return round((math.pow(a, n) - math.pow(b, n)) / math.sqrt(5))
+
+# compute factorial
+def finonacci_factorial(n):
+    # Special case: when n is 0, return 0 instead of 0! (which would normally be 1)
+    if n == 0:
+        return 1
+    # For n > 0, return n! using the built-in factorial function
+    else:
+        return math.factorial(n)
+
+
+#Generate series
+
+def finonacci_series(n):
+    # Initialize the list that will store the Fibonacci series
+    series = []
+
+    # Handle the case n == 0: only F(0) = 0
+    series.append(0)
+    if n == 0:
+        return series
+    # Handle the case n >= 1: append F(1) = 1
+    series.append(1)
+    if n == 1:
+        return series
+    
+    # For n >= 2, iteratively compute each next Fibonacci number
+    # using: F(k) = F(k-1) + F(k-2)
+    for i in range (2,n+1):
+       series.append(series[i-1]+series[i-2])
+    return series
+
+def finonacci_mutiply(n):
+    # Initialize the list that will store the Fibonacci series
+   total=1;
+   for i in range(1,n+1):
+      total*=i;
+   return total;
+
+
+
+# Recursive implementation of Fibonacci sequence
+# Returns the n-th Fibonacci number
+# Time complexity: O(2^n), because many subproblems are recomputed repeatedly.
+# Space complexity: O(n), due to the maximum depth of the recursion stack.
+# Therefore, this implementation is mainly for educational/demonstration purposes
+# and is NOT recommended for large n in real-world applications.
+# Risk of stack overflow:
+# For sufficiently large n, the recursion depth may exceed the maximum
+# call stack size of the Python interpreter (or the OS limit), which can
+# cause a RuntimeError (recursion depth exceeded) or stack overflow.
+def fibonacci_recursion(n):
+    # Base case 1: if n is 0, the 0th Fibonacci number is defined as 0
+    if n == 0:
+        return 0
+
+    # Base case 2: if n is 1, the 1st Fibonacci number is defined as 1
+    elif n == 1:
+        return 1
+
+    # Recursive case: for n >= 2, use the recurrence relation
+    # F(n) = F(n-1) + F(n-2)
+    # This calls the function itself to compute the two previous Fibonacci numbers,
+    # then returns their sum as the current Fibonacci number.
+    else:
+        return fibonacci_recursion(n-1) + fibonacci_recursion(n-2)
+
+# Initialize a global list to store Fibonacci numbers
+arrays = []
+# Dynamic programming approach to calculate Fibonacci numbers up to n
+# Stores all Fibonacci numbers in the 'arrays' list and returns the n-th Fibonacci number
+def fibonacci_dynamic_plan(n):
+    # Append the first Fibonacci number (0) to the list
+    arrays.append(0)   
+    if n == 0:
+        # Return 0 if n is 0
+        return 0     
+    # Append the second Fibonacci number (1) to the list
+    arrays.append(1)  
+    if n == 1:
+        # Return 1 if n is 1
+        return 1      
+    # Initialize first two Fibonacci numbers and a temporary variable
+    a, b, temp = 0, 1, 0    
+
+    for i in range(2, n + 1):
+        # algorithm 1: Update Fibonacci numbers using tuple assignment (Python-style multiple assignment).
+        # This style exists in languages like Python, JavaScript, and Go,
+        # but is NOT supported directly in C, C++, or Java, so it is not universally applicable across languages.
+        
+        # a, b = b, a + b
+
+        # algorithm 2: Update Fibonacci numbers using a temporary variable (classic swap).
+        # This approach has good readability and works in almost all programming languages,
+        # including C, C++, Java, Python, etc., so it is a classic and widely applicable algorithm.
+       
+        # temp now holds the old value of a
+        temp = a  
+        # a is updated to the previous value of b       
+        a = b   
+        # b becomes the sum of the previous a and b (the next Fibonacci number)         
+        b = b + temp      
+
+
+        # algorithm 3: Update Fibonacci numbers using arithmetic swap (without a temporary variable).
+        # First update b to the next Fibonacci number, then recover the previous b as the new a.
+        # This works, but the readability is relatively poor compared to the other methods.
+        # # b is updated to the next Fibonacci number
+        # b = a + b 
+        # # a becomes the previous value of b       
+        # a = b - a       
+
+        # Store each newly computed Fibonacci number in the list
+        arrays.append(b)
+    # Return the n-th Fibonacci number
+    return b  
+
+
+# Main function for user interaction
+def main():
+    while True:
+        try:
+            input_variable = int(input('Please input a positive number: '))
+            if input_variable < 0:
+                print(f"This is a negative number")
+                break
+            # Clear the list before generating new Fibonacci numbers
+            arrays.clear() 
+            # Print the n-th Fibonacci number using dynamic programming
+            print(f'The final number is {fibonacci_dynamic_plan(input_variable)}')
+            # Print the n-th Fibonacci number using the mathematical formula
+            print(f'The final number from fibonacci_math is {fibonacci_math(input_variable)}') 
+
+            print(f'The final number from finonacci_factorial is {finonacci_factorial(input_variable)}') 
+            # Print all Fibonacci numbers generated by the dynamic approach
+            print('Fibonacci series is ',end="")
+            print('{', end='')
+            print( *finonacci_series(input_variable), sep=', ',end='')
+            print('}')
+
+            print(finonacci_mutiply(input_variable));
+        except ValueError:
+            print("WARNING: This is not an integer! Please input again", end="")
+
+
+if __name__ == "__main__":
+    # Call main function to start Fibonacci program
+    print(math.factorial(10))
+    main()
