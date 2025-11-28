@@ -56,6 +56,23 @@ def finonacci_mutiply(n):
     return total
 
 
+def factorial_recursion(n):
+    """
+    Compute the factorial of n recursively.
+    
+    Args:
+        n (int): Non-negative integer
+
+    Returns:
+        int: n! (factorial of n)
+    """
+    # Base case: factorial of 0 is 1
+    if n == 0:
+        return 1
+    
+    # Recursive case: n! = n * (n-1)!
+    return n * factorial_recursion(n-1)
+
 
 # Main function for user interaction
 def main():
@@ -83,6 +100,8 @@ def main():
             print('{', end='')
             print( *fibonacci_series_math(input_variable), sep=', ',end='')
             print('}')
+
+            print(f'The n! using recursion is {factorial_recursion(input_variable)}') 
             
         except ValueError:
             print("WARNING: This is not an integer! Please input again", end="")
