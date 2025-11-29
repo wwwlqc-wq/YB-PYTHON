@@ -4,3 +4,4 @@ for x in stuple_var:
 
 for k,v in enumerate(stuple_var):
     print(k,v)
+
