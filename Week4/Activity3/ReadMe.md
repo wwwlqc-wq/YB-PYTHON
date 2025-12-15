@@ -1,106 +1,74 @@
-📌 Project Name
+# 📌 Week4 — Activity3
 
-University Course Management OOP + Generic Python CRUD Framework
+## 📄 Project Overview
 
-📍 Core Objective
+This Python project demonstrates basic database design and operations using SQLite3 with an object‑oriented approach.  
+It focuses on implementing **CRUD operations**, **entity classes**, and **generic repository patterns** to interact with a designed university/course database.
 
-This project demonstrates how to implement an OOP-based Python project to manage a university course system.
+---
 
-Key objectives:
+## 📍 Core Features
 
-Model students, teachers, courses, enrollments, and teaching assignments.
+### 🧱 1. Database Schema
 
-Support CRUD operations using generic repositories.
+The following tables are created in SQLite:
 
-Handle audit fields (create_time, modify_time) and soft deletes (is_deleted).
+- **students**  
+- **teachers**  
+- **courses**  
+- **enrollments** (student ↔ course relation)  
+- **teaching_assignments** (teacher ↔ course relation)
 
-Demonstrate common queries:
+These tables include common audit fields (`create_time`, `modify_time`, `is_deleted`) to manage soft deletion and tracking of records.
 
-Count the number of students enrolled in a course.
+---
 
-List all teachers teaching a specific course.
+## 🛠 Architecture
 
-🛠 Key Technologies
-⭐ 1. Python Standard Library
+### 🔹 Entities (Python Classes)
 
-sqlite3 for database operations.
+Each database table has a corresponding Python class extending a base entity class:
 
-datetime for managing timestamps.
+- `Student`
+- `Teacher`
+- `Course`
+- `Enrollment`
+- `TeachingAssignment`
 
-typing for generics: TypeVar, Generic, Type.
+Each entity encapsulates its fields and supports automatic handling of auditing values (timestamps and soft delete).
 
-🧱 2. Database Abstraction Layer
+---
 
-DBEngine abstract base class for database operations.
+### 📦 Generic Repository
 
-SQLiteEngine implements execute, fetch, executescript, commit, rollback, close.
+A generic repository (`Repository[T]`) is implemented to provide:
 
-Parameterized queries to prevent SQL injection.
+- Create (`insert`)
+- Read (`select`, `select_by_id`)
+- Update (`update_by_id`)
+- Soft delete and hard delete
+- Pagination
+- Support for flexible conditions
 
-🧠 3. Generic Repository Design
+The repository adapts automatically to SQLite by switching placeholders (`?`).
 
-Repository[T] supports any entity subclass of BaseEntity.
+---
 
-Provides CRUD operations:
+### 🧪 Core Business Logic
 
-insert, select, select_by_id
+The project includes examples comparing real use cases such as:
 
-update_by_id, soft_delete, hard_delete
+- Counting students enrolled in a specific course  
+- Listing teachers teaching a given course  
+- Demonstrating pagination and filtered queries
 
-Supports pagination and LIKE queries.
+These are implemented using the generic repositories and tested against sample datasets.
 
-Automatically handles audit fields and soft delete flags.
+---
 
-🧾 4. ORM-Like Entity Mapping
+## 🧰 Setup and Usage
 
-BaseEntity includes:
+### 📌 Requirements
 
-create_time, modify_time, is_deleted
-
-Optional primary key specification (__id_field__)
-
-Entities can be easily converted to dictionaries for SQL mapping.
-
-🔍 5. SQL Logging with AOP
-
-debug_sql decorator logs SQL queries before execution.
-
-Colors SQL keywords and parameters for readability.
-
-Shows execution time for monitoring performance.
-
-🧪 6. Data and Business Implementation
-
-Entities created for:
-
-Students (50 records)
-
-Teachers (10 records)
-
-Courses (5 records)
-
-Enrollments (Student-Course mapping)
-
-TeachingAssignments (Teacher-Course mapping)
-
-Example queries implemented using repositories:
-
-Count students in MSE800.
-
-List teachers for MSE801.
-
-🧩 Design Highlights
-
-Generic + Base classes improve code reuse.
-
-Clean layered architecture separates entities, repositories, and DB engine.
-
-Dynamic SQL placeholders (? for SQLite, %s for MySQL).
-
-Automatic audit field management.
-
-Supports soft delete and hard delete.
-
-Pagination and fuzzy search support.
-
-SQL debug logging for observability.
+```bash
+pip install pymysql
