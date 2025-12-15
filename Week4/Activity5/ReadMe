@@ -103,4 +103,4 @@ All queries are implemented via the generic Repository and SQL combination.
 ✔ SQL debug logging for observability
 
 🖼 ER Diagram
-https://github.com/Mason-MSE/YB-PYTHON/blob/main/Week4/Activity5/images/image.png
+![Clinic ER Diagram](https://github.com/Mason-MSE/YB-PYTHON/raw/main/Week4/Activity5/images/image.png)
