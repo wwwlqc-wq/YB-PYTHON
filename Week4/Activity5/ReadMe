@@ -1,0 +1,41 @@
+# Clinic Management System
+
+## Overview
+A Python OOP project using SQLite3/Mysql to manage a clinic's patients, doctors, and appointments.  
+- Generic repository pattern inspired by MyBatis
+- Soft delete via `is_deleted`
+- Audit fields: `create_time`, `modify_time`
+- Transactions supported
+- Queries:
+  1. List senior patients (age > 65)
+  2. Count ophthalmology doctors
+
+## Project Structure
+clinic-system/
+├── DB/
+├── Entities/
+├── Repositories/
+├── init.sql
+├── Example.py
+└── README.md
+
+## Setup
+1. Install Python 3.10
+2. Run `init.sql` to create tables
+3. Run `Example.py` for example usage
+
+## Features
+- Highly abstracted database access
+- Generic repository with transaction support
+- Soft deletion
+- Audit fields management
+- Clean separation of concerns
+
+## Usage Example
+```python
+db = Database("clinic.db")
+patient_repo = PatientRepository(db)
+seniors = patient_repo.get_seniors()
+for p in seniors:
+    print(p.full_name,p.birth_date)
+db.close()
