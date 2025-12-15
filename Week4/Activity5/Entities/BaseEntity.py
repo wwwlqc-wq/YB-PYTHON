@@ -19,6 +19,9 @@ class BaseEntity(Generic[T]):
         return f"{self.__class__.__name__}({attrs})"
 
 class Patient(BaseEntity["Patient"]):
+    __table__ = "patients"
+    __id_field__ = "patient_id"
+    __auto_increment__ = True
     def __init__(self, patient_id=None, full_name=None, birth_date=None, gender=None, phone=None, **kwargs):
         self.patient_id = patient_id
         self.full_name = full_name
@@ -28,6 +31,9 @@ class Patient(BaseEntity["Patient"]):
         super().__init__(**kwargs)
     
 class Doctor(BaseEntity["Doctor"]):
+    __table__ = "doctors"
+    __id_field__ = "doctor_id"
+    __auto_increment__ = True
     def __init__(self, doctor_id=None, full_name=None, speciality=None, phone=None, **kwargs):
         self.doctor_id = doctor_id
         self.full_name = full_name
@@ -36,6 +42,10 @@ class Doctor(BaseEntity["Doctor"]):
         super().__init__(**kwargs)
 
 class Appointment(BaseEntity["Appointment"]):
+    __table__ = "patients"
+    __id_field__ = "appointment_id"
+    __auto_increment__ = True
+
     def __init__(self, appointment_id=None, patient_id=None, doctor_id=None, appointment_date=None, **kwargs):
         self.appointment_id = appointment_id
         self.patient_id = patient_id

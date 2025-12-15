@@ -1,12 +1,15 @@
 from Repositories.BaseRepository import * 
 from  Entities.BaseEntity import *
-from DB.SQLiteEngine import SQLiteEngine 
+from DB.SQLiteEngine import SQLiteEngine
+from DB.MySQLEngine import MySQLEngine
 import os
 from Config import *
 if __name__ == "__main__":
     print(os.getcwd())
     db = SQLiteEngine("./data/clinic.db")
-    with open("init.sql", "r") as f:
+    # db=MySQLEngine("127.0.0.1","root","rootpassword","mydb")
+    with open("init_sqlite.sql", "r") as f:
+    # with open("init.sql", "r") as f:
         sql_contents = f.read()
         db.executescript(sql_contents)
         db.commit()    
@@ -41,7 +44,7 @@ if __name__ == "__main__":
     doctor_repo.hard_delete_by_id(11)
     rows=db.fetch("select * from doctors where doctor_id=11")
     doc11= Doctor(**dict(rows[0])) if rows else None
-    print(doc11)
+    print("doc11",doc11)
     doctor_repo.soft_delete_by_id(11)
     print(doctor_repo.select_by_id(11))
 

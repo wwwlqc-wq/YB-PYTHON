@@ -1,6 +1,6 @@
 -- Create patients table
 CREATE TABLE IF NOT EXISTS patients (
-    patient_id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    patient_id INTEGER PRIMARY KEY ,
     full_name TEXT,
     birth_date date,
     gender TEXT,
@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS patients (
 
 -- Create doctors table
 CREATE TABLE IF NOT EXISTS doctors (
-    doctor_id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    doctor_id INTEGER PRIMARY KEY ,
     full_name TEXT,
     speciality TEXT,
     phone TEXT,
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS doctors (
 
 -- Create appointments table
 CREATE TABLE IF NOT EXISTS appointments (
-    appointment_id INTEGER PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    appointment_id INTEGER PRIMARY KEY,
     patient_id INTEGER,
     doctor_id INTEGER,
     appointment_date DATE,

@@ -1,28 +1,48 @@
+import pymysql
+from pymysql.cursors import DictCursor
+from DB.DBEngine import DBEngine
+from Log import *
 
-# from DBEngine import DBEngine
 
-# class MySQLEngine(DBEngine):
-#     def __init__(self, host, user, password, database):
-#         self.conn = mysql.connector.connect(
-#             host=host, user=user, password=password, database=database
-#         )
-#         self.cursor = self.conn.cursor()
+class MySQLEngine(DBEngine):
+    def __init__(self, host, user, password, database, port=3306):
+        self.conn = pymysql.connect(
+            host=host,
+            user=user,
+            password=password,
+            database=database,
+            port=port,
+            charset="utf8mb4",
+            autocommit=False,         
+            cursorclass=DictCursor   
+        )
+        self.cursor = self.conn.cursor()
 
-#     def execute(self, sql, params=()):
-#         self.cursor.execute(sql, params)
+    @debug_sql
+    def execute(self, sql, params=()):
+        self.cursor.execute(sql, params)
 
-#     def fetch(self, sql, params=()):
-#         self.cursor.execute(sql, params)
-#         return self.cursor.fetchall()
+    @debug_sql
+    def executescript(self, sql):
+     
+        # PyMySQL does NOT support executescript natively.
+        # Split SQL manually for compatibility with SQLiteEngine.
+        for stmt in sql.split(";"):
+            stmt = stmt.strip()
+            if stmt:
+                self.cursor.execute(stmt)
 
-#     def commit(self):
-#         self.conn.commit()
+    @debug_sql
+    def fetch(self, sql, params=()):
+        self.cursor.execute(sql, params)
+        return self.cursor.fetchall()
 
-#     def rollback(self):
-#         self.conn.rollback()
+    def commit(self):
+        self.conn.commit()
 
-#     def close(self):
-#         if not self.cursor:
-#             self.cursor.close()
-#         if not self.conn:
-#             self.conn.close()
+    def rollback(self):
+        self.conn.rollback()
+
+    def close(self):
+        self.cursor.close()
+        self.conn.close()

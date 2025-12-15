@@ -15,10 +15,22 @@ class Repository(Generic[T]):
         self.table = table_name
         self.entity_class = entity_class
 
-    def insert(self, data: T):
-        keys = ", ".join(data.__dict__.keys())
-        placeholders = ", ".join([self._placeholder() for _ in data.__dict__])
-        values = tuple(data.__dict__.values())
+    def insert(self, entity: T):
+        pk_name = getattr(entity, "__id_field__", None)
+        auto_inc = getattr(entity, "__auto_increment__", True)
+        data = {}
+        for field in getattr(entity, "__fields__", entity.__dict__.keys()):
+            value = getattr(entity, field, None)
+            if value is None and field == pk_name and auto_inc:
+                continue
+            if value is not None:
+                data[field] = value
+
+        if not data:
+            raise ValueError("No data to insert")
+        keys = ", ".join(data.keys())
+        placeholders = ", ".join([self._placeholder() for _ in data])
+        values = tuple(data.values())
         sql = f"INSERT INTO {self.table} ({keys}) VALUES ({placeholders})"
         self.db.execute(sql, values)
         return self.db.cursor.lastrowid
@@ -153,10 +165,10 @@ class PatientRepository(Repository[Patient]):
     def __init__(self, db):
         super().__init__(db, "patients", Patient)
 
-    def get_seniors(self,sqltype='sqlite',age_threshold=65) -> List[Patient]:
+    def get_seniors(self,age_threshold=65) -> List[Patient]:
         #List all patients aged > 65.
         sql = "SELECT * FROM patients WHERE (strftime('%Y', 'now') - strftime('%Y', birth_date)) > ? AND is_deleted=0"
-        if(sqltype=='mysql'):
+        if(self.db.__class__.__name__ != "SQLiteEngine"):
             sql = "SELECT * FROM patients WHERE TIMESTAMPDIFF(YEAR, birth_date, CURDATE()) >%s AND is_deleted=0"
         rows = self.db.fetch(sql,(age_threshold,))
         return [Patient(**row) for row in map(dict, rows)]
@@ -168,7 +180,18 @@ class DoctorRepository(Repository[Doctor]):
     def count_ophthalmology(self):
         #Count doctors specialized in ophthalmology.
         sql = "SELECT COUNT(1) FROM doctors WHERE speciality='ophthalmology' AND is_deleted=0"
-        return self.db.fetch(sql)[0][0]
+        row = self.db.fetch(sql)
+        if(self.db.__class__.__name__!="SQLiteEngine"):
+            return list(row[0].values())[0]
+        else:
+            return row[0][0]
+        # return [tuple(r) for r in row]
+        # if isinstance(row, tuple) or isinstance(row, list):
+        #     return row[0]  # MySQL
+        # else:
+        #     return row[0][0]  
+      
+
 
 class AppointmentRepository(Repository[Appointment]):
     def __init__(self, db):
