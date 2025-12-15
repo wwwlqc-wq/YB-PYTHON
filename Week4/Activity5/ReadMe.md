@@ -1,106 +1,102 @@
-📌 Project Name
+# 📌 Project Name
 
-Clinic Database OOP + Generic ORM-Like Python CRUD Framework
+**Clinic Database OOP + Generic ORM-Like Python CRUD Framework**
 
-📍 Core Objective
+---
+
+## 📍 Core Objective
 
 Develop a general-purpose Python database access layer that:
 
-Supports multiple databases: SQLite & MySQL
+- Supports multiple databases: **SQLite** & **MySQL**  
+- Uses **OOP design** for data access abstraction  
+- Implements a **clean layered architecture** for database operations  
+- Provides entity models, generic repositories, transaction, and logging support  
+- Demonstrates CRUD operations and business queries on clinic data  
 
-Uses OOP design for data access abstraction
+---
 
-Implements a clean layered architecture for database operations
+## 🛠 Key Technologies and Architecture
 
-Provides entity models, generic repositories, transaction, and logging support
+### ⭐ 1. Python Standard Library
 
-Demonstrates CRUD operations and business queries on clinic data
+- `sqlite3` for SQLite local database operations  
+- `datetime` for audit fields (`create_time`, `modify_time`)  
+- `typing` for generic type support: `Generic`, `TypeVar`, `Type`  
 
-🛠 Key Technologies and Architecture
-⭐ 1. Python Standard Library
+---
 
-sqlite3 for SQLite local database operations
+### 🧱 2. Database Abstraction Layer
 
-datetime for audit fields (create_time, modify_time)
+Implemented a unified `DBEngine` abstract base class:
 
-typing for generic type support: Generic, TypeVar, Type
+- **SQLiteEngine**: using `sqlite3`  
+- **MySQLEngine**: using third-party module `pymysql`  
+- Standardized interface for: `execute`, `fetch`, `executescript`, `commit`, `rollback`, `close`  
+- All SQL queries are **parameterized** to prevent SQL injection  
 
-🧱 2. Database Abstraction Layer
+> Pluggable DB engines improve cross-database compatibility and maintainability
 
-Implemented a unified DBEngine abstract base class:
+---
 
-SQLiteEngine: using sqlite3
+### 🧠 3. Generic Repository Design (Generic + OOP)
 
-MySQLEngine: using third-party module pymysql
+Implemented `Repository[T]` using Python generics:
 
-Standardized interface for: execute, fetch, executescript, commit, rollback, close
+- Supports any `BaseEntity` subclass  
+- Automatically adapts SQL placeholders (`?` for SQLite, `%s` for MySQL)  
+- Encapsulates common CRUD operations:  
+  - `insert`, `select`, `select_by_id`  
+  - `update_by_id`, `soft_delete`, `hard_delete`  
+  - Supports pagination and LIKE queries  
+- Recognizes primary key fields, auto-handles audit fields, and soft delete flags  
 
-All SQL queries are parameterized to prevent SQL injection
+This design follows a **layered repository pattern** for maintainable and reusable database operations.
 
-Pluggable DB engines improve cross-database compatibility and maintainability
+---
 
-🧠 3. Generic Repository Design (Generic + OOP)
-
-Implemented Repository[T] using Python generics:
-
-Supports any BaseEntity subclass
-
-Automatically adapts SQL placeholders (? for SQLite, %s for MySQL)
-
-Encapsulates common CRUD operations:
-
-insert, select, select_by_id
-
-update_by_id, soft_delete, hard_delete
-
-Supports pagination and LIKE queries
-
-Recognizes primary key fields, auto-handles audit fields, and soft delete flags
-
-This design follows the Repository and MyBatis-style layered pattern.
-
-🧾 4. ORM-Like Entity Mapping
+### 🧾 4. ORM-Like Entity Mapping
 
 Entity classes inherit a base class:
 
-Includes audit fields: create_time, modify_time, is_deleted
+- Includes audit fields: `create_time`, `modify_time`, `is_deleted`  
+- Can declare primary key and field lists  
+- Can easily convert objects to SQL field dictionaries  
+- Repository layer maps objects to SQL parameters automatically
 
-Can declare primary key and field lists
+---
 
-Can easily convert objects to SQL field dictionaries
+### 🔍 5. SQL Logging with AOP
 
-Repository layer maps objects to SQL parameters automatically
+Implemented `debug_sql` decorator:
 
-🔍 5. SQL Logging with AOP
+- Automatically prints generated SQL for every execution  
+- Formats parameters in color for clarity  
+- Displays execution time for monitoring  
 
-Implemented debug_sql decorator:
+> Similar to SQL interceptors in enterprise frameworks
 
-Automatically prints generated SQL for every execution
+---
 
-Formats parameters in color for clarity
-
-Displays execution time for monitoring
-
-Similar to Java/MyBatis SQL interceptors
-
-🧪 6. Core Business Implementation
+### 🧪 6. Core Business Implementation
 
 Clinic scenario examples:
 
-List all patients over 65 years old
-
-Count doctors specialized in ophthalmology
+- List all **patients over 65 years old**  
+- Count doctors specialized in **ophthalmology**  
 
 All queries are implemented via the generic Repository and SQL combination.
 
-🧩 Design Highlights
+---
 
-✔ Generic + base classes improve code reuse
-✔ Layered architecture inspired by enterprise frameworks
-✔ Dynamic SQL placeholders for multi-database support
-✔ Automatic audit field handling
-✔ Pagination and fuzzy search support
-✔ SQL debug logging for observability
+### 🧩 Design Highlights
+
+- ✔ Generic + base classes improve code reuse  
+- ✔ Layered architecture for clean separation of concerns  
+- ✔ Dynamic SQL placeholders for multi-database support  
+- ✔ Automatic audit field handling  
+- ✔ Pagination and fuzzy search support  
+- ✔ SQL debug logging for observability
 
 🖼 ER Diagram
 ![Clinic ER Diagram](https://github.com/Mason-MSE/YB-PYTHON/raw/main/Week4/Activity5/images/image.png)
