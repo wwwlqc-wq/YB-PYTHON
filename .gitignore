@@ -1,0 +1,13 @@
+# Ignore local database files
+data/*.db
+data/*.sql
+
+# Ignore Mac system files
+.DS_Store
+
+# Ignore Jupyter checkpoints
+.ipynb_checkpoints/
+
+data/*.db
+
+.ipynb_checkpoints/
